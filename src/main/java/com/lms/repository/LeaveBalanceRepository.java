@@ -4,7 +4,9 @@ import com.lms.entity.LeaveBalance;
 import com.lms.entity.LeaveBalanceId;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface LeaveBalanceRepository
-        extends JpaRepository<LeaveBalance, LeaveBalanceId>
+import java.util.List;
+
+public interface LeaveBalanceRepository extends JpaRepository<LeaveBalance, LeaveBalanceId>
 {
+    List<LeaveBalance> findByIdEmployeeId(String employeeId);
 }

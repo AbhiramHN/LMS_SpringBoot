@@ -3,7 +3,13 @@ package com.lms.entity;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "leave_balance")
 public class LeaveBalance
@@ -12,28 +18,4 @@ public class LeaveBalance
     private LeaveBalanceId id;
 
     private int balance;
-
-    public LeaveBalance()
-    {
-    }
-
-    public LeaveBalanceId getId()
-    {
-        return id;
-    }
-
-    public void setId(LeaveBalanceId id)
-    {
-        this.id = id;
-    }
-
-    public int getBalance()
-    {
-        return balance;
-    }
-
-    public void setBalance(int balance)
-    {
-        this.balance = balance;
-    }
 }

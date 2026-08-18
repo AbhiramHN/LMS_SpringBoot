@@ -2,10 +2,22 @@ package com.lms.entity;
 
 import com.lms.enums.LeaveStatus;
 import com.lms.enums.LeaveType;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "leave_request")
 public class LeaveRequest
@@ -35,114 +47,4 @@ public class LeaveRequest
     private LocalDate approvalDate;
 
     private String approvedBy;
-
-    public int getLeaveId()
-    {
-        return leaveId;
-    }
-
-    public void setLeaveId(int leaveId)
-    {
-        this.leaveId = leaveId;
-    }
-
-    public String getEmployeeId()
-    {
-        return employeeId;
-    }
-
-    public void setEmployeeId(String employeeId)
-    {
-        this.employeeId = employeeId;
-    }
-
-    public LeaveType getLeaveType()
-    {
-        return leaveType;
-    }
-
-    public void setLeaveType(LeaveType leaveType)
-    {
-        this.leaveType = leaveType;
-    }
-
-    public LocalDate getFromDate()
-    {
-        return fromDate;
-    }
-
-    public void setFromDate(LocalDate fromDate)
-    {
-        this.fromDate = fromDate;
-    }
-
-    public LocalDate getToDate()
-    {
-        return toDate;
-    }
-
-    public void setToDate(LocalDate toDate)
-    {
-        this.toDate = toDate;
-    }
-
-    public int getNumberOfDays()
-    {
-        return numberOfDays;
-    }
-
-    public void setNumberOfDays(int numberOfDays)
-    {
-        this.numberOfDays = numberOfDays;
-    }
-
-    public String getReason()
-    {
-        return reason;
-    }
-
-    public void setReason(String reason)
-    {
-        this.reason = reason;
-    }
-
-    public LeaveStatus getStatus()
-    {
-        return status;
-    }
-
-    public void setStatus(LeaveStatus status)
-    {
-        this.status = status;
-    }
-
-    public LocalDate getRequestDate()
-    {
-        return requestDate;
-    }
-
-    public void setRequestDate(LocalDate requestDate)
-    {
-        this.requestDate = requestDate;
-    }
-
-    public LocalDate getApprovalDate()
-    {
-        return approvalDate;
-    }
-
-    public void setApprovalDate(LocalDate approvalDate)
-    {
-        this.approvalDate = approvalDate;
-    }
-
-    public String getApprovedBy()
-    {
-        return approvedBy;
-    }
-
-    public void setApprovedBy(String approvedBy)
-    {
-        this.approvedBy = approvedBy;
-    }
 }

@@ -4,10 +4,16 @@ import com.lms.enums.LeaveType;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Objects;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Embeddable
 public class LeaveBalanceId implements Serializable
 {
@@ -16,33 +22,9 @@ public class LeaveBalanceId implements Serializable
     @Enumerated(EnumType.STRING)
     private LeaveType leaveType;
 
-    public LeaveBalanceId()
-    {
-    }
-
     public LeaveBalanceId(String employeeId, LeaveType leaveType)
     {
         this.employeeId = employeeId;
-        this.leaveType = leaveType;
-    }
-
-    public String getEmployeeId()
-    {
-        return employeeId;
-    }
-
-    public void setEmployeeId(String employeeId)
-    {
-        this.employeeId = employeeId;
-    }
-
-    public LeaveType getLeaveType()
-    {
-        return leaveType;
-    }
-
-    public void setLeaveType(LeaveType leaveType)
-    {
         this.leaveType = leaveType;
     }
 
