@@ -7,23 +7,12 @@ import java.time.LocalDate;
 
 public class EmployeeRegistrationRequest
 {
-    private String employeeId;
     private String name;
     private Designation designation;
     private int age;
     private Gender gender;
     private String password;
     private LocalDate joiningDate;
-
-    public String getEmployeeId()
-    {
-        return employeeId;
-    }
-
-    public void setEmployeeId(String employeeId)
-    {
-        this.employeeId = employeeId;
-    }
 
     public String getName()
     {

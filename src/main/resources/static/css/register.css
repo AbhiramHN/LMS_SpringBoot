@@ -1,0 +1,45 @@
+#registerForm {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#registerForm label {
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 8px;
+}
+
+#registerForm input,
+#registerForm select {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 15px;
+}
+
+#registerForm input:focus,
+#registerForm select:focus {
+    outline: none;
+    border-color: #555;
+}
+
+#registerForm button {
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 15px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+#registerForm button[type="submit"] {
+    background: #333;
+    color: white;
+}
+
+#registerForm button[type="button"] {
+    background: #e5e5e5;
+    color: #222;
+}

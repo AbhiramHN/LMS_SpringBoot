@@ -1,6 +1,7 @@
 package com.lms.service;
 
 import com.lms.dto.request.EmployeeRegistrationRequest;
+import com.lms.dto.response.EmployeeResponse;
 import com.lms.entity.Employee;
 import com.lms.entity.LeaveBalance;
 import com.lms.entity.LeaveBalanceId;
@@ -14,14 +15,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmployeeService
 {
-    @Autowired
-    private EmployeeRepository employeeRepository;
+    private final EmployeeRepository employeeRepository;
+    private final LeaveBalanceRepository leaveBalanceRepository;
 
-    @Autowired
-    private LeaveBalanceRepository leaveBalanceRepository;
+    public EmployeeService(EmployeeRepository employeeRepository, LeaveBalanceRepository leaveBalanceRepository) {
+
+        this.employeeRepository = employeeRepository;
+        this.leaveBalanceRepository = leaveBalanceRepository;
+    }
 
     @Transactional
-    public Employee registerEmployee(EmployeeRegistrationRequest request)
+    public EmployeeResponse registerEmployee(EmployeeRegistrationRequest request)
     {
         Employee employee = new Employee();
 
@@ -39,7 +43,16 @@ public class EmployeeService
 
         initializeLeaveBalances(savedEmployee.getEmployeeId());
 
-        return savedEmployee;
+        EmployeeResponse response = new EmployeeResponse();
+
+        response.setEmployeeId(savedEmployee.getEmployeeId());
+        response.setName(savedEmployee.getName());
+        response.setDesignation(savedEmployee.getDesignation());
+        response.setAge(savedEmployee.getAge());
+        response.setGender(savedEmployee.getGender());
+        response.setJoiningDate(savedEmployee.getJoiningDate());
+
+        return response;
     }
 
     private String generateEmployeeId()

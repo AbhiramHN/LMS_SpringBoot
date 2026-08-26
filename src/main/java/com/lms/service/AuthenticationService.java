@@ -11,8 +11,12 @@ import java.util.Optional;
 @Service
 public class AuthenticationService
 {
-    @Autowired
-    private EmployeeRepository employeeRepository;
+    final private EmployeeRepository employeeRepository;
+
+    AuthenticationService(EmployeeRepository employeeRepository)
+    {
+        this.employeeRepository = employeeRepository;
+    }
 
     public Employee login(LoginRequest request)
     {

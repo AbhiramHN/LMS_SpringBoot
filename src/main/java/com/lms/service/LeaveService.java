@@ -89,6 +89,8 @@ public class LeaveService
 
         leaveRequest.setToDate(request.getToDate());
 
+        leaveRequest.setNumberOfDays((int) numberOfDays);
+
         leaveRequest.setReason(request.getReason());
 
         leaveRequest.setStatus(LeaveStatus.PENDING);
@@ -101,5 +103,10 @@ public class LeaveService
     public List<LeaveBalance> getLeaveBalances(String employeeId)
     {
         return leaveBalanceRepository.findByIdEmployeeId(employeeId);
+    }
+
+    public List<LeaveRequest> getLeaveHistory(String employeeId)
+    {
+        return leaveRequestRepository.findByEmployeeId(employeeId);
     }
 }

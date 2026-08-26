@@ -7,11 +7,24 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface LeaveRequestRepository extends JpaRepository<LeaveRequest, Integer>
+public interface LeaveRequestRepository
+        extends JpaRepository<LeaveRequest, Integer>
 {
-    boolean existsByEmployeeIdAndStatus(String employeeId, LeaveStatus status);
+    boolean existsByEmployeeIdAndStatus(
+            String employeeId,
+            LeaveStatus status);
 
-    List<LeaveRequest> findByEmployeeId(String employeeId);
+    List<LeaveRequest> findByEmployeeId(
+            String employeeId);
 
-    boolean existsByEmployeeIdAndFromDateLessThanEqualAndToDateGreaterThanEqual(String employeeId, LocalDate toDate, LocalDate fromDate);
+    boolean existsByEmployeeIdAndFromDateLessThanEqualAndToDateGreaterThanEqual(
+            String employeeId,
+            LocalDate toDate,
+            LocalDate fromDate);
+
+    List<LeaveRequest> findByStatus(
+            LeaveStatus status);
+
+    long countByStatus(
+            LeaveStatus status);
 }
