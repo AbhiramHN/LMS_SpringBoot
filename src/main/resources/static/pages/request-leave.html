@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Request Leave</title>
+
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/request-leave.css">
+    <link rel="stylesheet" href="../css/toast.css">
+
+</head>
+
+<body>
+
+<div class="leave-container">
+
+    <div class="leave-card">
+
+        <div class="page-header">
+
+            <h1>Request Leave</h1>
+
+            <a href="dashboard.html">
+                Back to Dashboard
+            </a>
+
+        </div>
+
+
+        <form id="leaveForm">
+
+            <div class="form-group">
+
+                <label for="leaveType">
+                    Leave Type
+                </label>
+
+                <select id="leaveType" required>
+
+                    <option value="">
+                        Select Leave Type
+                    </option>
+
+                    <option value="CL">
+                        Casual Leave
+                    </option>
+
+                    <option value="EL">
+                        Earned Leave
+                    </option>
+
+                    <option value="SL">
+                        Sick Leave
+                    </option>
+
+                    <option value="ML">
+                        Maternity Leave
+                    </option>
+
+                    <option value="PL">
+                        Paternity Leave
+                    </option>
+
+                    <option value="LWP">
+                        Leave Without Pay
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="fromDate">
+                    From Date
+                </label>
+
+                <input
+                        type="date"
+                        id="fromDate"
+                        required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="toDate">
+                    To Date
+                </label>
+
+                <input
+                        type="date"
+                        id="toDate"
+                        required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="reason">
+                    Reason
+                </label>
+
+                <textarea
+                        id="reason"
+                        rows="5"
+                        placeholder="Enter reason for leave"
+                        required></textarea>
+
+            </div>
+
+
+            <button type="submit">
+                Submit Leave Request
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script src="../js/toast.js"></script>
+<script src="../js/request-leave.js"></script>
+
+</body>
+
+</html>
