@@ -29,8 +29,15 @@
 }
 
 .header-logout {
+    background: none;
+    border: none;
+    padding: 0;
+
     color: #dc2626;
     font-weight: bold;
+
+    cursor: pointer;
+    font-size: 16px;
 }
 
 .dashboard-grid {
@@ -95,7 +102,7 @@
     gap: 15px;
 }
 
-.action-grid a {
+.action-grid button {
     display: flex;
 
     align-items: center;
@@ -108,14 +115,18 @@
 
     color: white;
 
+    border: none;
     border-radius: 12px;
 
     font-weight: bold;
+    font-size: 15px;
+
+    cursor: pointer;
 
     transition: 0.2s;
 }
 
-.action-grid a:hover {
+.action-grid button:hover {
     transform: translateY(-4px);
 }
 

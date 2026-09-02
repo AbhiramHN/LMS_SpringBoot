@@ -2,10 +2,9 @@ package com.lms.validation;
 
 import com.lms.dto.request.LeaveApplicationRequest;
 import com.lms.entity.Employee;
-import com.lms.entity.LeaveRequest;
 import com.lms.enums.LeaveStatus;
 import com.lms.enums.LeaveType;
-import com.lms.interfaces.LeaveValidationRule;
+import com.lms.service.LeaveValidatable;
 import com.lms.repository.LeaveRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,7 +13,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 @Component
-public class LeaveWithoutPayValidation implements LeaveValidationRule
+public class LeaveWithoutPayValidation implements LeaveValidatable
 {
     @Autowired
     private LeaveRequestRepository leaveRequestRepository;

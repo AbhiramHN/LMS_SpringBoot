@@ -1,9 +1,9 @@
-.pending-container {
+.history-container {
     max-width: 1200px;
     margin: 40px auto;
 }
 
-.pending-card {
+.history-card {
     background: white;
     padding: 30px;
     border-radius: 15px;
@@ -21,10 +21,21 @@
     margin: 0;
 }
 
-.page-header a {
+.page-header button {
+    background: none;
+    border: none;
+    padding: 0;
+
     color: #2563eb;
+
+    font-size: 15px;
     font-weight: bold;
-    text-decoration: none;
+
+    cursor: pointer;
+}
+
+.page-header button:hover {
+    color: #1d4ed8;
 }
 
 .table-container {
@@ -39,12 +50,15 @@ table {
 th {
     background: #2563eb;
     color: white;
+
     padding: 14px;
+
     text-align: left;
 }
 
 td {
     padding: 14px;
+
     border-bottom: 1px solid #e5e7eb;
 }
 
@@ -52,37 +66,28 @@ tr:hover {
     background: #f8fafc;
 }
 
-.action-buttons {
-    display: flex;
-    gap: 8px;
-}
-
-.approve-button,
-.reject-button {
-    border: none;
-    padding: 8px 12px;
-    border-radius: 6px;
-    color: white;
+.status {
     font-weight: bold;
-    cursor: pointer;
 }
 
-.approve-button {
-    background: #16a34a;
+.status-PENDING {
+    color: #d97706;
 }
 
-.reject-button {
-    background: #dc2626;
+.status-APPROVED {
+    color: #16a34a;
 }
 
-.approve-button:hover,
-.reject-button:hover {
-    opacity: 0.85;
+.status-REJECTED {
+    color: #dc2626;
+}
+
+.status-REVOKED {
+    color: #7c3aed;
 }
 
 @media (max-width: 768px) {
-
-    .pending-container {
+    .history-container {
         margin: 20px;
     }
 

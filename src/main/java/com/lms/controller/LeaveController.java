@@ -22,7 +22,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/leave")
+@RequestMapping("/api/v1/leave")
 public class LeaveController
 {
 

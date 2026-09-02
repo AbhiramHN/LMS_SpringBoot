@@ -1,26 +1,19 @@
-.history-container {
+.revoke-container {
     max-width: 1200px;
-
     margin: 40px auto;
 }
 
-.history-card {
+.revoke-card {
     background: white;
-
     padding: 30px;
-
     border-radius: 15px;
-
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .page-header {
     display: flex;
-
     justify-content: space-between;
-
     align-items: center;
-
     margin-bottom: 30px;
 }
 
@@ -28,12 +21,20 @@
     margin: 0;
 }
 
-.page-header a {
-    color: #2563eb;
+.page-header button {
+    background: none;
+    border: none;
+    padding: 0;
 
+    color: #2563eb;
+    font-size: 15px;
     font-weight: bold;
 
-    text-decoration: none;
+    cursor: pointer;
+}
+
+.page-header button:hover {
+    color: #1d4ed8;
 }
 
 .table-container {
@@ -42,23 +43,18 @@
 
 table {
     width: 100%;
-
     border-collapse: collapse;
 }
 
 th {
     background: #2563eb;
-
     color: white;
-
     padding: 14px;
-
     text-align: left;
 }
 
 td {
     padding: 14px;
-
     border-bottom: 1px solid #e5e7eb;
 }
 
@@ -66,37 +62,30 @@ tr:hover {
     background: #f8fafc;
 }
 
-.status {
+.revoke-button {
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+
+    background: #dc2626;
+    color: white;
+
     font-weight: bold;
+    cursor: pointer;
 }
 
-.status-PENDING {
-    color: #d97706;
-}
-
-.status-APPROVED {
-    color: #16a34a;
-}
-
-.status-REJECTED {
-    color: #dc2626;
-}
-
-.status-REVOKED {
-    color: #7c3aed;
+.revoke-button:hover {
+    opacity: 0.85;
 }
 
 @media (max-width: 768px) {
-
-    .history-container {
+    .revoke-container {
         margin: 20px;
     }
 
     .page-header {
         flex-direction: column;
-
         align-items: flex-start;
-
         gap: 10px;
     }
 }

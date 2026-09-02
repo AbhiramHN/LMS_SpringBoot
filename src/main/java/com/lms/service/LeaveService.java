@@ -7,7 +7,6 @@ import com.lms.entity.LeaveBalanceId;
 import com.lms.entity.LeaveRequest;
 import com.lms.enums.LeaveStatus;
 import com.lms.enums.LeaveType;
-import com.lms.interfaces.LeaveValidationRule;
 import com.lms.repository.EmployeeRepository;
 import com.lms.repository.LeaveBalanceRepository;
 import com.lms.repository.LeaveRequestRepository;
@@ -31,11 +30,11 @@ public class LeaveService
     private EmployeeRepository employeeRepository;
 
     @Autowired
-    private List<LeaveValidationRule> validationRules;
+    private List<LeaveValidatable> validationRules;
 
-    private LeaveValidationRule getValidationRule(LeaveType leaveType)
+    private LeaveValidatable getValidationRule(LeaveType leaveType)
     {
-        for (LeaveValidationRule validationRule : validationRules)
+        for (LeaveValidatable validationRule : validationRules)
         {
             if (validationRule.getLeaveType() == leaveType)
             {
@@ -51,7 +50,7 @@ public class LeaveService
     {
         Employee employee = employeeRepository.findByEmployeeId(request.getEmployeeId()).orElseThrow(() -> new RuntimeException("Employee not found."));
 
-        LeaveValidationRule validationRule = getValidationRule(request.getLeaveType());
+        LeaveValidatable validationRule = getValidationRule(request.getLeaveType());
 
         boolean isValid = validationRule.validate(employee, request);
 

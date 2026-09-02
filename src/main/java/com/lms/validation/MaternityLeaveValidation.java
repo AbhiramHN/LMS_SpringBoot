@@ -7,7 +7,7 @@ import com.lms.entity.LeaveBalanceId;
 import com.lms.enums.Gender;
 import com.lms.enums.LeaveStatus;
 import com.lms.enums.LeaveType;
-import com.lms.interfaces.LeaveValidationRule;
+import com.lms.service.LeaveValidatable;
 import com.lms.repository.LeaveBalanceRepository;
 import com.lms.repository.LeaveRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 @Component
-public class MaternityLeaveValidation implements LeaveValidationRule
+public class MaternityLeaveValidation implements LeaveValidatable
 {
     @Autowired
     private LeaveRequestRepository leaveRequestRepository;
