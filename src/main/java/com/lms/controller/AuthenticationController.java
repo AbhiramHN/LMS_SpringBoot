@@ -31,9 +31,7 @@ public class AuthenticationController
 
         if (employee == null)
         {
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body("Invalid Employee ID or Password");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Employee ID or Password");
         }
 
         session.setAttribute("employee", employee);
@@ -48,9 +46,7 @@ public class AuthenticationController
 
         if (employee == null)
         {
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body("User is not logged in");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not logged in");
         }
 
         Map<String, Object> response = new HashMap<>();

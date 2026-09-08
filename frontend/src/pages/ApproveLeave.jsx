@@ -65,8 +65,7 @@ function ApproveLeave() {
 
     const processLeave = async (leaveId, action) => {
         try {
-            const response = await fetch(
-                `/api/v1/leave/${leaveId}/${action}`,
+            const response = await fetch(`/api/v1/leave/${leaveId}/${action}`,
                 {
                     method: "PUT"
                 }

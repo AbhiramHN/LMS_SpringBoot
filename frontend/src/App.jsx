@@ -6,6 +6,7 @@ import RequestLeave from "./pages/RequestLeave";
 import LeaveHistory from "./pages/LeaveHistory";
 import ApproveLeave from "./pages/ApproveLeave";
 import RevokeLeave from "./pages/RevokeLeave";
+import NotFound from "./pages/NotFound";
 
 function App() {
     return (
@@ -18,6 +19,8 @@ function App() {
                 <Route path="/leave-history" element={<LeaveHistory />} />
                 <Route path="/approve-leave" element={<ApproveLeave />} />
                 <Route path="/revoke-leave" element={<RevokeLeave />} />
+
+                <Route path="*" element={<NotFound />} />
             </Routes>
         </BrowserRouter>
     );
