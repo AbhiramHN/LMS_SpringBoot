@@ -16,6 +16,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -87,6 +88,8 @@ public class LeaveService
         leaveRequest.setNumberOfDays((int) numberOfDays);
 
         leaveRequest.setReason(request.getReason());
+
+        leaveRequest.setRequestDate(LocalDate.now());
 
         leaveRequest.setStatus(LeaveStatus.PENDING);
 
