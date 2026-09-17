@@ -2,36 +2,33 @@ package com.lms.service;
 
 import com.lms.dto.request.LoginRequest;
 import com.lms.entity.Employee;
+import com.lms.exception.UnauthorizedException;
 import com.lms.repository.EmployeeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class AuthenticationService
 {
-    final private EmployeeRepository employeeRepository;
+    private final EmployeeRepository employeeRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    AuthenticationService(EmployeeRepository employeeRepository)
+    public AuthenticationService(
+            EmployeeRepository employeeRepository,
+            PasswordEncoder passwordEncoder)
     {
         this.employeeRepository = employeeRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Employee login(LoginRequest request)
     {
-        Optional<Employee> optionalEmployee = employeeRepository.findByEmployeeId(request.getEmployeeId());
+        Employee employee = employeeRepository.findByEmployeeId(request.getEmployeeId()).orElseThrow(() ->
+                        new UnauthorizedException("Invalid employee ID or password"));
 
-        if (optionalEmployee.isEmpty())
+        if (!passwordEncoder.matches(request.getPassword(), employee.getPassword()))
         {
-            return null;
-        }
-
-        Employee employee = optionalEmployee.get();
-
-        if (!employee.getPassword().equals(request.getPassword()))
-        {
-            return null;
+            throw new UnauthorizedException("Invalid employee ID or password");
         }
 
         return employee;

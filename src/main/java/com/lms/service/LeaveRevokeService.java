@@ -7,6 +7,9 @@ import com.lms.entity.LeaveRequest;
 import com.lms.enums.Designation;
 import com.lms.enums.LeaveStatus;
 import com.lms.enums.LeaveType;
+import com.lms.exception.ForbiddenException;
+import com.lms.exception.InvalidLeaveOperationException;
+import com.lms.exception.ResourceNotFoundException;
 import com.lms.repository.EmployeeRepository;
 import com.lms.repository.LeaveBalanceRepository;
 import com.lms.repository.LeaveRequestRepository;
@@ -27,29 +30,25 @@ public class LeaveRevokeService
     private final LeaveBalanceRepository leaveBalanceRepository;
 
     @Transactional
-    public LeaveRequest revokeLeave(
-            int leaveId,
-            RevokeLeaveRequest request)
+    public LeaveRequest revokeLeave(int leaveId, RevokeLeaveRequest request)
     {
         Employee manager = employeeRepository
                 .findByEmployeeId(
                         request.getManagerEmployeeId())
-                .orElseThrow(() -> new RuntimeException("Manager not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Manager not found"));
 
         LeaveRequest leaveRequest = leaveRequestRepository
                 .findById(leaveId)
-                .orElseThrow(() -> new RuntimeException(
-                        "Leave request not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Leave request not found"));
 
         Employee employee = employeeRepository.findByEmployeeId(leaveRequest.getEmployeeId())
                 .orElseThrow(() ->
-                        new RuntimeException("Employee not found"));
+                        new ResourceNotFoundException("Employee not found"));
 
         if (manager.getDesignation() != Designation.LEAD
                 && manager.getDesignation() != Designation.MANAGER)
         {
-            throw new RuntimeException(
-                    "Only Leads and Managers can revoke leave requests");
+            throw new ForbiddenException("Only Leads and Managers can revoke leave requests");
         }
 
         if (manager.getDesignation() == Designation.LEAD)
@@ -57,7 +56,7 @@ public class LeaveRevokeService
             if (employee.getDesignation()
                     != Designation.EXECUTIVE)
             {
-                throw new RuntimeException(
+                throw new ForbiddenException(
                         "Lead can revoke only Executive leave requests");
             }
         }
@@ -68,8 +67,7 @@ public class LeaveRevokeService
             if (manager.getEmployeeId()
                     .equals(employee.getEmployeeId()))
             {
-                throw new RuntimeException(
-                        "Manager cannot revoke their own leave request");
+                throw new ForbiddenException("Manager cannot revoke their own leave request");
             }
         }
 
@@ -77,14 +75,15 @@ public class LeaveRevokeService
         if (leaveRequest.getStatus()
                 != LeaveStatus.APPROVED)
         {
-            throw new RuntimeException("Only approved leave requests can be revoked");
+            throw new InvalidLeaveOperationException(
+                    "Only approved leave requests can be revoked");
         }
 
 
         if (!leaveRequest.getFromDate()
                 .isAfter(LocalDate.now()))
         {
-            throw new RuntimeException("Only future leave requests can be revoked");
+            throw new InvalidLeaveOperationException("Only future leave requests can be revoked");
         }
 
 
@@ -100,7 +99,7 @@ public class LeaveRevokeService
                                             == leaveRequest
                                             .getLeaveType())
                             .findFirst()
-                            .orElseThrow(() -> new RuntimeException("Leave balance not found"));
+                            .orElseThrow(() -> new ResourceNotFoundException("Leave balance not found"));
 
             leaveBalance.setBalance(leaveBalance.getBalance() + leaveRequest.getNumberOfDays());
 

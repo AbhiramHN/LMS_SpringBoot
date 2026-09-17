@@ -1,6 +1,7 @@
 package com.lms.service;
 
 import com.lms.enums.LeaveStatus;
+import com.lms.exception.ReportGenerationException;
 import com.lms.repository.EmployeeRepository;
 import com.lms.repository.LeaveRequestRepository;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,6 @@ import java.time.LocalDateTime;
 public class ReportService
 {
     private final EmployeeRepository employeeRepository;
-
     private final LeaveRequestRepository leaveRequestRepository;
 
     public ReportService(
@@ -21,7 +21,6 @@ public class ReportService
             LeaveRequestRepository leaveRequestRepository)
     {
         this.employeeRepository = employeeRepository;
-
         this.leaveRequestRepository = leaveRequestRepository;
     }
 
@@ -31,20 +30,16 @@ public class ReportService
                 employeeRepository.count();
 
         long pendingLeaves =
-                leaveRequestRepository
-                        .countByStatus(LeaveStatus.PENDING);
+                leaveRequestRepository.countByStatus(LeaveStatus.PENDING);
 
         long approvedLeaves =
-                leaveRequestRepository
-                        .countByStatus(LeaveStatus.APPROVED);
+                leaveRequestRepository.countByStatus(LeaveStatus.APPROVED);
 
         long rejectedLeaves =
-                leaveRequestRepository
-                        .countByStatus(LeaveStatus.REJECTED);
+                leaveRequestRepository.countByStatus(LeaveStatus.REJECTED);
 
         long revokedLeaves =
-                leaveRequestRepository
-                        .countByStatus(LeaveStatus.REVOKED);
+                leaveRequestRepository.countByStatus(LeaveStatus.REVOKED);
 
         try (FileWriter writer =
                      new FileWriter("D:\\Java Projects\\LMS-SpringBoot\\src\\main\\java\\com\\lms\\reports\\LeaveReport.txt"))
@@ -80,12 +75,11 @@ public class ReportService
             writer.write("\n=====================================\n");
             writer.write("End Of Report\n");
             writer.write("=====================================\n");
-
-            System.out.println("Report generated successfully.");
         }
         catch (IOException exception)
         {
-            exception.printStackTrace();
+            throw new ReportGenerationException(
+                    "Unable to generate leave report.", exception);
         }
     }
 }

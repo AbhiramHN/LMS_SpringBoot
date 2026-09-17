@@ -24,6 +24,8 @@ public class AuthenticationController
         this.authenticationService = authenticationService;
     }
 
+
+
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequest request, HttpSession session)
     {
@@ -38,6 +40,8 @@ public class AuthenticationController
 
         return ResponseEntity.ok("Login successful.");
     }
+
+
 
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(HttpSession session)
@@ -57,6 +61,8 @@ public class AuthenticationController
 
         return ResponseEntity.ok(response);
     }
+
+
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpSession session)

@@ -1,16 +1,18 @@
 package com.lms.service;
 
-import com.lms.dto.request.ManagerActionRequest;
 import com.lms.entity.Employee;
 import com.lms.entity.LeaveBalance;
 import com.lms.entity.LeaveRequest;
 import com.lms.enums.Designation;
 import com.lms.enums.LeaveStatus;
+import com.lms.exception.LeaveAlreadyProcessedException;
+import com.lms.exception.ResourceNotFoundException;
 import com.lms.repository.EmployeeRepository;
 import com.lms.repository.LeaveBalanceRepository;
 import com.lms.repository.LeaveRequestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import com.lms.exception.ForbiddenException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -31,23 +33,22 @@ public class LeaveApprovalService
         Employee manager = employeeRepository
                 .findByEmployeeId(managerEmployeeId)
                 .orElseThrow(() ->
-                        new RuntimeException("Manager not found"));
+                        new ResourceNotFoundException("Manager not found"));
 
         LeaveRequest leaveRequest = leaveRequestRepository
                 .findById(leaveId)
                 .orElseThrow(() ->
-                        new RuntimeException("Leave request not found"));
+                        new ResourceNotFoundException("Leave request not found"));
 
         if (leaveRequest.getStatus() != LeaveStatus.PENDING)
         {
-            throw new RuntimeException(
-                    "Leave request has already been processed");
+            throw new LeaveAlreadyProcessedException("Leave request has already been processed");
         }
 
         Employee employee = employeeRepository
                 .findByEmployeeId(leaveRequest.getEmployeeId())
                 .orElseThrow(() ->
-                        new RuntimeException("Employee not found"));
+                        new ResourceNotFoundException("Employee not found"));
 
 
 
@@ -55,7 +56,7 @@ public class LeaveApprovalService
         {
             if (employee.getDesignation() != Designation.EXECUTIVE)
             {
-                throw new RuntimeException(
+                throw new ForbiddenException(
                         "Lead can approve only Executive leave requests");
             }
         }
@@ -66,7 +67,7 @@ public class LeaveApprovalService
             if (manager.getEmployeeId()
                     .equals(employee.getEmployeeId()))
             {
-                throw new RuntimeException(
+                throw new ForbiddenException(
                         "Manager cannot approve their own leave request");
             }
         }
@@ -74,7 +75,7 @@ public class LeaveApprovalService
 
         else
         {
-            throw new RuntimeException(
+            throw new ForbiddenException(
                     "Only Leads and Managers can approve leave requests");
         }
 
@@ -133,30 +134,29 @@ public class LeaveApprovalService
         Employee manager = employeeRepository
                 .findByEmployeeId(managerEmployeeId)
                 .orElseThrow(() ->
-                        new RuntimeException("Manager not found"));
+                        new ResourceNotFoundException("Manager not found"));
 
         LeaveRequest leaveRequest = leaveRequestRepository
                 .findById(leaveId)
                 .orElseThrow(() ->
-                        new RuntimeException("Leave request not found"));
+                        new ResourceNotFoundException("Leave request not found"));
 
         if (leaveRequest.getStatus() != LeaveStatus.PENDING)
         {
-            throw new RuntimeException(
-                    "Leave request has already been processed");
+            throw new LeaveAlreadyProcessedException("Leave request has already been processed");
         }
 
         Employee employee = employeeRepository
                 .findByEmployeeId(leaveRequest.getEmployeeId())
                 .orElseThrow(() ->
-                        new RuntimeException("Employee not found"));
+                        new ResourceNotFoundException("Employee not found"));
 
 
         if (manager.getDesignation() == Designation.LEAD)
         {
             if (employee.getDesignation() != Designation.EXECUTIVE)
             {
-                throw new RuntimeException(
+                throw new ForbiddenException(
                         "Lead can reject only Executive leave requests");
             }
         }
@@ -166,14 +166,14 @@ public class LeaveApprovalService
             if (manager.getEmployeeId()
                     .equals(employee.getEmployeeId()))
             {
-                throw new RuntimeException(
+                throw new ForbiddenException(
                         "Manager cannot reject their own leave request");
             }
         }
 
         else
         {
-            throw new RuntimeException(
+            throw new ForbiddenException(
                     "Only Leads and Managers can reject leave requests");
         }
 
@@ -186,8 +186,7 @@ public class LeaveApprovalService
                                 == leaveRequest.getLeaveType())
                 .findFirst()
                 .orElseThrow(() ->
-                        new RuntimeException(
-                                "Leave balance not found"));
+                        new ResourceNotFoundException("Leave balance not found"));
 
         leaveBalance.setBalance(
                 leaveBalance.getBalance()

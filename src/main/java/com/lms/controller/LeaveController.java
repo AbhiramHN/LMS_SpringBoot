@@ -127,21 +127,11 @@ public class LeaveController
                     .body("User is not logged in");
         }
 
-        try
-        {
-            return ResponseEntity.ok(
-                    leaveApprovalService.approveLeave(
-                            leaveId,
-                            manager.getEmployeeId()
-                    )
-            );
-        }
-        catch (RuntimeException e)
-        {
-            return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body(e.getMessage());
-        }
+
+        return ResponseEntity.ok(
+                leaveApprovalService.approveLeave(leaveId, manager.getEmployeeId())
+        );
+
     }
 
     @PutMapping("/{leaveId}/reject")
@@ -159,21 +149,12 @@ public class LeaveController
                     .body("User is not logged in");
         }
 
-        try
-        {
-            return ResponseEntity.ok(
-                    leaveApprovalService.rejectLeave(
-                            leaveId,
-                            manager.getEmployeeId()
-                    )
+
+        return ResponseEntity.ok(
+                leaveApprovalService.rejectLeave(
+                        leaveId, manager.getEmployeeId())
             );
-        }
-        catch (RuntimeException e)
-        {
-            return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body(e.getMessage());
-        }
+
     }
 
 
@@ -193,16 +174,8 @@ public class LeaveController
 
         request.setManagerEmployeeId(manager.getEmployeeId());
 
-        try
-        {
-            return ResponseEntity.ok(leaveRevokeService.revokeLeave(leaveId, request));
-        }
-        catch (RuntimeException exception)
-        {
-            return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body(exception.getMessage());
-        }
+
+        return ResponseEntity.ok(leaveRevokeService.revokeLeave(leaveId, request));
     }
 
 

@@ -7,30 +7,26 @@ import com.lms.entity.LeaveBalanceId;
 import com.lms.entity.LeaveRequest;
 import com.lms.enums.LeaveStatus;
 import com.lms.enums.LeaveType;
+import com.lms.exception.InvalidLeaveTypeException;
+import com.lms.exception.ResourceNotFoundException;
 import com.lms.repository.EmployeeRepository;
 import com.lms.repository.LeaveBalanceRepository;
 import com.lms.repository.LeaveRequestRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class LeaveService
 {
-    @Autowired
-    private LeaveRequestRepository leaveRequestRepository;
-
-    @Autowired
-    private LeaveBalanceRepository leaveBalanceRepository;
-
-    @Autowired
-    private EmployeeRepository employeeRepository;
-
-    @Autowired
-    private List<LeaveValidatable> validationRules;
+    private final LeaveRequestRepository leaveRequestRepository;
+    private final LeaveBalanceRepository leaveBalanceRepository;
+    private final EmployeeRepository employeeRepository;
+    private final List<LeaveValidatable> validationRules;
 
     private LeaveValidatable getValidationRule(LeaveType leaveType)
     {
@@ -42,13 +38,13 @@ public class LeaveService
             }
         }
 
-        throw new RuntimeException("Invalid leave type.");
+        throw new InvalidLeaveTypeException("Invalid leave type.");
     }
 
     @Transactional
     public String applyLeave(LeaveApplicationRequest request)
     {
-        Employee employee = employeeRepository.findByEmployeeId(request.getEmployeeId()).orElseThrow(() -> new RuntimeException("Employee not found."));
+        Employee employee = employeeRepository.findByEmployeeId(request.getEmployeeId()).orElseThrow(() -> new ResourceNotFoundException("Employee not found."));
 
         LeaveValidatable validationRule = getValidationRule(request.getLeaveType());
 
@@ -66,7 +62,7 @@ public class LeaveService
             LeaveBalanceId leaveBalanceId = new LeaveBalanceId(request.getEmployeeId(), request.getLeaveType());
 
             leaveBalance = leaveBalanceRepository.findById(leaveBalanceId).orElseThrow(() ->
-                                    new RuntimeException("Leave balance not found."));
+                                    new ResourceNotFoundException("Leave balance not found."));
         }
 
         long numberOfDays = ChronoUnit.DAYS.between(request.getFromDate(), request.getToDate()) + 1;

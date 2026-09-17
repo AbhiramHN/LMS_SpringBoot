@@ -5,16 +5,24 @@ import com.lms.entity.Employee;
 import com.lms.entity.LeaveBalance;
 import com.lms.entity.LeaveBalanceId;
 import com.lms.enums.LeaveType;
+import com.lms.exception.ResourceNotFoundException;
 import com.lms.repository.LeaveBalanceRepository;
+import com.lms.repository.LeaveRequestRepository;
 import com.lms.service.LeaveValidationService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class SickLeaveValidation extends LeaveValidationService
 {
-    @Autowired
-    private LeaveBalanceRepository leaveBalanceRepository;
+    private final LeaveBalanceRepository leaveBalanceRepository;
+
+    public SickLeaveValidation(
+            LeaveRequestRepository leaveRequestRepository,
+            LeaveBalanceRepository leaveBalanceRepository)
+    {
+        super(leaveRequestRepository);
+        this.leaveBalanceRepository = leaveBalanceRepository;
+    }
 
     @Override
     public LeaveType getLeaveType()
@@ -25,10 +33,11 @@ public class SickLeaveValidation extends LeaveValidationService
     @Override
     protected boolean validateSpecificLeave(Employee employee, LeaveApplicationRequest request, long numberOfDays)
     {
-        LeaveBalanceId leaveBalanceId = new LeaveBalanceId(employee.getEmployeeId(), LeaveType.SL);
+        LeaveBalanceId leaveBalanceId =
+                new LeaveBalanceId(employee.getEmployeeId(), LeaveType.SL);
 
-        LeaveBalance leaveBalance = leaveBalanceRepository.findById(leaveBalanceId)
-                .orElseThrow(() -> new RuntimeException("Leave balance not found."));
+        LeaveBalance leaveBalance = leaveBalanceRepository.findById(leaveBalanceId).orElseThrow(() ->
+                                new ResourceNotFoundException("Leave balance not found."));
 
         if (numberOfDays > leaveBalance.getBalance())
         {

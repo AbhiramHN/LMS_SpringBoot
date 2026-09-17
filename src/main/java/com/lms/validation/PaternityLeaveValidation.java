@@ -6,16 +6,24 @@ import com.lms.entity.LeaveBalance;
 import com.lms.entity.LeaveBalanceId;
 import com.lms.enums.Gender;
 import com.lms.enums.LeaveType;
+import com.lms.exception.ResourceNotFoundException;
 import com.lms.repository.LeaveBalanceRepository;
+import com.lms.repository.LeaveRequestRepository;
 import com.lms.service.LeaveValidationService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PaternityLeaveValidation extends LeaveValidationService
 {
-    @Autowired
-    private LeaveBalanceRepository leaveBalanceRepository;
+    private final LeaveBalanceRepository leaveBalanceRepository;
+
+    public PaternityLeaveValidation(
+            LeaveRequestRepository leaveRequestRepository,
+            LeaveBalanceRepository leaveBalanceRepository)
+    {
+        super(leaveRequestRepository);
+        this.leaveBalanceRepository = leaveBalanceRepository;
+    }
 
     @Override
     public LeaveType getLeaveType()
@@ -31,10 +39,11 @@ public class PaternityLeaveValidation extends LeaveValidationService
             return false;
         }
 
-        LeaveBalanceId leaveBalanceId = new LeaveBalanceId(employee.getEmployeeId(), LeaveType.PL);
+        LeaveBalanceId leaveBalanceId =
+                new LeaveBalanceId(employee.getEmployeeId(), LeaveType.PL);
 
-        LeaveBalance leaveBalance = leaveBalanceRepository.findById(leaveBalanceId)
-                        .orElseThrow(() -> new RuntimeException("Leave balance not found."));
+        LeaveBalance leaveBalance = leaveBalanceRepository.findById(leaveBalanceId).orElseThrow(() ->
+                                new ResourceNotFoundException("Leave balance not found."));
 
         if (numberOfDays > leaveBalance.getBalance())
         {

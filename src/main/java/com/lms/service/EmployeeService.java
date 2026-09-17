@@ -9,7 +9,7 @@ import com.lms.enums.LeaveType;
 import com.lms.repository.EmployeeRepository;
 import com.lms.repository.LeaveBalanceRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,11 +17,16 @@ public class EmployeeService
 {
     private final EmployeeRepository employeeRepository;
     private final LeaveBalanceRepository leaveBalanceRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public EmployeeService(EmployeeRepository employeeRepository, LeaveBalanceRepository leaveBalanceRepository) {
-
+    public EmployeeService(
+            EmployeeRepository employeeRepository,
+            LeaveBalanceRepository leaveBalanceRepository,
+            PasswordEncoder passwordEncoder)
+    {
         this.employeeRepository = employeeRepository;
         this.leaveBalanceRepository = leaveBalanceRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
@@ -36,7 +41,7 @@ public class EmployeeService
         employee.setDesignation(request.getDesignation());
         employee.setAge(request.getAge());
         employee.setGender(request.getGender());
-        employee.setPassword(request.getPassword());
+        employee.setPassword(passwordEncoder.encode(request.getPassword()));
         employee.setJoiningDate(request.getJoiningDate());
 
         Employee savedEmployee = employeeRepository.save(employee);
@@ -71,8 +76,7 @@ public class EmployeeService
         return String.format("EMP%04d", number);
     }
 
-    private void initializeLeaveBalances(
-            String employeeId)
+    private void initializeLeaveBalances(String employeeId)
     {
         createLeaveBalance(employeeId, LeaveType.CL, 12);
         createLeaveBalance(employeeId, LeaveType.EL, 15);
@@ -83,14 +87,14 @@ public class EmployeeService
         createLeaveBalance(employeeId, LeaveType.LWP, 0);
     }
 
-    private void createLeaveBalance(String employeeId, LeaveType leaveType, int balance)
+    private void createLeaveBalance(
+            String employeeId, LeaveType leaveType, int balance)
     {
         LeaveBalance leaveBalance = new LeaveBalance();
 
         LeaveBalanceId id = new LeaveBalanceId(employeeId, leaveType);
 
         leaveBalance.setId(id);
-
         leaveBalance.setBalance(balance);
 
         leaveBalanceRepository.save(leaveBalance);

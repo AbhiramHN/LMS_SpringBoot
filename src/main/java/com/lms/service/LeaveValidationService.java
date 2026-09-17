@@ -4,15 +4,17 @@ import com.lms.dto.request.LeaveApplicationRequest;
 import com.lms.entity.Employee;
 import com.lms.enums.LeaveStatus;
 import com.lms.repository.LeaveRequestRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 public abstract class LeaveValidationService implements LeaveValidatable
 {
-    @Autowired
-    protected LeaveRequestRepository leaveRequestRepository;
+    protected final LeaveRequestRepository leaveRequestRepository;
+
+    protected LeaveValidationService(LeaveRequestRepository leaveRequestRepository) {
+        this.leaveRequestRepository = leaveRequestRepository;
+    }
 
     @Override
     public final boolean validate(Employee employee, LeaveApplicationRequest request)
