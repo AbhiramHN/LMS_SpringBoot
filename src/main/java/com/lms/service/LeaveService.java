@@ -1,0 +1,110 @@
+package com.lms.service;
+
+import com.lms.dto.request.LeaveApplicationRequest;
+import com.lms.entity.Employee;
+import com.lms.entity.LeaveBalance;
+import com.lms.entity.LeaveBalanceId;
+import com.lms.entity.LeaveRequest;
+import com.lms.enums.LeaveStatus;
+import com.lms.enums.LeaveType;
+import com.lms.exception.InvalidLeaveTypeException;
+import com.lms.exception.ResourceNotFoundException;
+import com.lms.repository.EmployeeRepository;
+import com.lms.repository.LeaveBalanceRepository;
+import com.lms.repository.LeaveRequestRepository;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class LeaveService
+{
+    private final LeaveRequestRepository leaveRequestRepository;
+    private final LeaveBalanceRepository leaveBalanceRepository;
+    private final EmployeeRepository employeeRepository;
+    private final List<LeaveValidatable> validationRules;
+
+    private LeaveValidatable getValidationRule(LeaveType leaveType)
+    {
+        for (LeaveValidatable validationRule : validationRules)
+        {
+            if (validationRule.getLeaveType() == leaveType)
+            {
+                return validationRule;
+            }
+        }
+
+        throw new InvalidLeaveTypeException("Invalid leave type.");
+    }
+
+    @Transactional
+    public String applyLeave(LeaveApplicationRequest request)
+    {
+        Employee employee = employeeRepository.findByEmployeeId(request.getEmployeeId()).orElseThrow(() -> new ResourceNotFoundException("Employee not found."));
+
+        LeaveValidatable validationRule = getValidationRule(request.getLeaveType());
+
+        boolean isValid = validationRule.validate(employee, request);
+
+        if (!isValid)
+        {
+            return "Leave request failed.";
+        }
+
+        LeaveBalance leaveBalance = null;
+
+        if (request.getLeaveType() != LeaveType.LWP)
+        {
+            LeaveBalanceId leaveBalanceId = new LeaveBalanceId(request.getEmployeeId(), request.getLeaveType());
+
+            leaveBalance = leaveBalanceRepository.findById(leaveBalanceId).orElseThrow(() ->
+                                    new ResourceNotFoundException("Leave balance not found."));
+        }
+
+        long numberOfDays = ChronoUnit.DAYS.between(request.getFromDate(), request.getToDate()) + 1;
+
+        if (request.getLeaveType() != LeaveType.LWP)
+        {
+            leaveBalance.setBalance(leaveBalance.getBalance() - (int) numberOfDays);
+
+            leaveBalanceRepository.save(leaveBalance);
+        }
+
+        LeaveRequest leaveRequest = new LeaveRequest();
+
+        leaveRequest.setEmployeeId(request.getEmployeeId());
+
+        leaveRequest.setLeaveType(request.getLeaveType());
+
+        leaveRequest.setFromDate(request.getFromDate());
+
+        leaveRequest.setToDate(request.getToDate());
+
+        leaveRequest.setNumberOfDays((int) numberOfDays);
+
+        leaveRequest.setReason(request.getReason());
+
+        leaveRequest.setRequestDate(LocalDate.now());
+
+        leaveRequest.setStatus(LeaveStatus.PENDING);
+
+        leaveRequestRepository.save(leaveRequest);
+
+        return "Leave applied successfully.";
+    }
+
+    public List<LeaveBalance> getLeaveBalances(String employeeId)
+    {
+        return leaveBalanceRepository.findByIdEmployeeId(employeeId);
+    }
+
+    public List<LeaveRequest> getLeaveHistory(String employeeId)
+    {
+        return leaveRequestRepository.findByEmployeeId(employeeId);
+    }
+}
